@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <tlhelp32.h>
 #include <setupapi.h>
+#include <math.h>
 #include "DXBCChecksum.h"
 
 BOOL SetPrivilege(
@@ -244,11 +245,11 @@ typedef LONG (NTAPI *NtSuspendProcess_t)(IN HANDLE ProcessHandle);
 typedef LONG (NTAPI *NtResumeProcess_t)(IN HANDLE ProcessHandle);
 
 int main(int argc, char *argv[]) {
-    if (argc > 2) {
-        printf("Usage: dwm_eotf [gamma]\n");
+    if (argc > 3) {
+        printf("Usage: dwm_eotf [gamma [scale factor]]\n");
         return 1;
     }
-    if (argc == 2) {
+    if (argc >= 2) {
         float gamma = atof(argv[1]);
         if (gamma < 1 || gamma > 10) {
             printf("Got invalid gamma value %f, exiting\n", gamma);
@@ -256,6 +257,15 @@ int main(int argc, char *argv[]) {
         }
 
         patchedConstants[0] = gamma;
+    }
+    if (argc == 3) {
+        float scale = atof(argv[2]);
+        if (scale < 0.01 || scale > 10) {
+            printf("Got invalid scale factor %f, exiting\n", scale);
+            return 1;
+        }
+
+        patchedConstants[3] = powf(sqrtf(scale), 1 / patchedConstants[0]);
     }
 
     currentSessionId = WTSGetActiveConsoleSessionId();
