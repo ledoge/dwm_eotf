@@ -1,5 +1,5 @@
 # About
-This is a proof of concept for changing the EOTF/gamma that Windows uses when converting SDR content to HDR. By patching shaders in DWM's memory, the sRGB EOTF is effectively replaced with a "normal" gamma EOTF.
+This is a proof of concept for changing the EOTF ("gamma") that Windows uses when converting SDR content to HDR. By patching shaders in DWM's memory, the sRGB EOTF is effectively replaced with a "normal" gamma EOTF.
 
 # Usage
 Simply run `dwm_eotf.exe`. Note that it will kill the DWM process (which Windows will restart automatically), which can cause issues with some applications until they are restarted.
